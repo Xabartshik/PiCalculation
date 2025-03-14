@@ -251,7 +251,9 @@ namespace PiCalculation
             MachinPlotModel = new PlotModel { Title = "Метод Мачина" };
 
             DataContext = this;
+            this.Closing += MainWindow_Closing; // Подписываемся на событие Closing
         }
+
 
         // Метод Лейбница
         private void LeibnizStartButton_Click(object sender, RoutedEventArgs e)
@@ -512,7 +514,36 @@ namespace PiCalculation
                 machinSemaphore.WaitOne(1000);
             }
         }
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Останавливаем поток Архимеда
+            if (archimedesThread != null && archimedesThread.IsAlive)
+            {
+                isArchimedesRunning = false; // Устанавливаем флаг остановки
+                archimedesSemaphore.Release(); // Разблокируем поток, если он ожидает
+                archimedesThread.Join(); // Ожидаем завершения потока
+            }
+            if (leibnizThread != null && leibnizThread.IsAlive)
+            {
+                isLeibnizRunning = false; // Устанавливаем флаг остановки
+                leibnizSemaphore.Release(); // Разблокируем поток, если он ожидает
+                leibnizThread.Join(); // Ожидаем завершения потока
+            }
+            if (bbpThread != null && bbpThread.IsAlive)
+            {
+                isArchimedesRunning = false; // Устанавливаем флаг остановки
+                bbpSemaphore.Release(); // Разблокируем поток, если он ожидает
+                bbpThread.Join(); // Ожидаем завершения потока
+            }
+            if (machinThread != null && machinThread.IsAlive)
+            {
+                isMachinRunning = false; // Устанавливаем флаг остановки
+                machinSemaphore.Release(); // Разблокируем поток, если он ожидает
+                machinThread.Join(); // Ожидаем завершения потока
+            }
 
+            // Добавьте аналогичные действия для других потоков, если они есть
+        }
         private void MachinStopButton_Click(object sender, RoutedEventArgs e)
         {
             isMachinRunning = false;
