@@ -301,7 +301,7 @@ namespace PiCalculation
             archimedesThread = new Thread(() => Calculations.Calculation(new ArchCalculation(), maxIterations, ref isArchimedesRunning, series, ArchimedesPiValue, ArchimedesIterationValue, ArchimedesProgressBar, ArchimedesPlotModel, this.Dispatcher, ArchCancellationTokenSource.Token));
             archimedesThread.Start();
         }
-
+        //Остановка вычисления для Архимеда
         private void ArchimedesStopButton_Click(object sender, RoutedEventArgs e)
         {
             isArchimedesRunning = false;
@@ -326,7 +326,7 @@ namespace PiCalculation
         }
 
 
-
+        //Остановка вычисления для ВВр
         private void BBPStopButton_Click(object sender, RoutedEventArgs e)
         {
             isBBPRunning = false;
@@ -334,7 +334,7 @@ namespace PiCalculation
 
 
 
-        // Метод Мачина
+        //Остановка вычисления для Мачина
         private void MachinStartButton_Click(object sender, RoutedEventArgs e)
         {
             if (machinThread != null && machinThread.IsAlive)
@@ -361,7 +361,7 @@ namespace PiCalculation
                 thread.Join(); // Ожидаем завершения потока
             }
         }
-        
+        //Завершение всех потоков при закрытии окна
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             StopThread(archimedesThread, isArchimedesRunning, ArchCancellationTokenSource);
@@ -369,6 +369,7 @@ namespace PiCalculation
             StopThread(bbpThread, isBBPRunning, BBPCancellationTokenSource);
             StopThread(machinThread, isMachinRunning, MachinCancellationTokenSource);
         }
+        //Остановка вычисления для Мачина
         private void MachinStopButton_Click(object sender, RoutedEventArgs e)
         {
             isMachinRunning = false;
